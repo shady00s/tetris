@@ -119,7 +119,8 @@ const App: React.FC = () => {
                 // Resume
                 setDropTime(1000 / (level + 1) + 200); // Restore drop time based on level
                 setIsPaused(false);
-                audioRef.current?.play().catch(error => console.error("Audio resume failed:", error)); // Resume music
+                // Type assertion for safety
+                (audioRef.current as HTMLAudioElement)?.play().catch(error => console.error("Audio resume failed:", error)); // Resume music
             } else {
                 // Pause
                 setDropTime(null); // Stop the drop interval
@@ -130,7 +131,7 @@ const App: React.FC = () => {
     };
 
 
-    const drop = () => {
+    const drop = (): void => {
         // Increase level when player has cleared 10 rows
         if (rows > (level + 1) * 10) {
             setLevel(prev => prev + 1);
