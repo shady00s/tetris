@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 // Update imports to usx/.ts extensions (though Vite might handle this)
-import Board from './components/Board.tsx';
-import NextPiecePreview from './components/NextPiecePreview.tsx';
+import Board from './components/Board';
+import NextPiecePreview from './components/NextPiecePreview';
 
 // Custom Hooks
 import { usePlayer } from './hooks/usePlayer';
@@ -10,8 +10,7 @@ import { useInterval } from './hooks/useInterval';
 import { useGameStatus } from './hooks/useGameStatus';
 
 // Helpers
-import { createStage, checkCollision } from './gameHelpers.ts'; // Ensure this points to .ts
-import { StageType } from './types'; // Import StageType if needed elsewhere
+import { createStage, checkCollision } from './gameHelpers'; // Ensure this points to .ts
 
 // Styles - Add type React.CSSProperties
 const appStyle: React.CSSProperties = {
@@ -104,7 +103,7 @@ const App: React.FC = () => {
         // Initialize and start playing music
         if (!audioRef.current) {
             // Initialize on first start if not already done
-            audioRef.current = new Audio('/tetris-theme.mp3');
+            audioRef.current = new Audio('./assets/Tetris.mp3');
             audioRef.current.loop = true;
         }
         // Reset playback to the beginning and play

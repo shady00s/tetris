@@ -1,4 +1,4 @@
-import { Tetromino, TetrominoType } from './types'; // Import types
+import { Tetromino } from './types'; // Import types
 
 // Define the type for the TETROMINOES constant
 // Keys are TetrominoType (letters) or 0, but represented as strings/numbers in JS object keys
