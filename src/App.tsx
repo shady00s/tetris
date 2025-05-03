@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-// Update imports to use .tsx/.ts extensions (though Vite might handle this)
+// Update imports to usx/.ts extensions (though Vite might handle this)
 import Board from './components/Board.tsx';
 import NextPiecePreview from './components/NextPiecePreview.tsx';
 
 // Custom Hooks
-import { usePlayer } from './hooks/usePlayer.ts';
-import { useStage } from './hooks/useStage.ts';
-import { useInterval } from './hooks/useInterval.ts';
-import { useGameStatus } from './hooks/useGameStatus.ts';
+import { usePlayer } from './hooks/usePlayer';
+import { useStage } from './hooks/useStage';
+import { useInterval } from './hooks/useInterval';
+import { useGameStatus } from './hooks/useGameStatus';
 
 // Helpers
 import { createStage, checkCollision } from './gameHelpers.js'; // Keep .js if not converted
