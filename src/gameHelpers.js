@@ -7,10 +7,11 @@ export const createStage = () =>
     );
 
 export const checkCollision = (player, stage, { x: moveX, y: moveY }) => {
-    for (let y = 0; y < player.tetromino.length; y += 1) {
-        for (let x = 0; x < player.tetromino[y].length; x += 1) {
+    // Use player.tetromino.shape
+    for (let y = 0; y < player.tetromino.shape.length; y += 1) {
+        for (let x = 0; x < player.tetromino.shape[y].length; x += 1) {
             // 1. Check that we're on an actual Tetromino cell
-            if (player.tetromino[y][x] !== 0) {
+            if (player.tetromino.shape[y][x] !== 0) {
                 // 2. Check that our move is inside the game areas height (y)
                 // We shouldn't go through the bottom of the play area
                 if (

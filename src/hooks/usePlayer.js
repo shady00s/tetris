@@ -24,24 +24,27 @@ export const usePlayer = () => {
 
     const playerRotate = (stage, dir) => {
         const clonedPlayer = JSON.parse(JSON.stringify(player));
-        clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
+        // Rotate the shape, not the whole tetromino object
+        clonedPlayer.tetromino.shape = rotate(clonedPlayer.tetromino.shape, dir);
 
         const pos = clonedPlayer.pos.x;
         let offset = 1;
         while (checkCollision(clonedPlayer, stage, { x: 0, y: 0 })) {
             clonedPlayer.pos.x += offset;
             offset = -(offset + (offset > 0 ? 1 : -1));
-            if (offset > clonedPlayer.tetromino[0].length) {
-                rotate(clonedPlayer.tetromino, -dir); // Rotate back
+             // Check offset against the rotated shape's width
+            if (offset > clonedPlayer.tetromino.shape[0].length) {
+                // Rotate the shape back if collision check fails
+                clonedPlayer.tetromino.shape = rotate(clonedPlayer.tetromino.shape, -dir);
                 clonedPlayer.pos.x = pos;
                 return;
             }
         }
 
-        // Update player state with the rotated tetromino
+        // Update player state with the rotated shape and new position
         setPlayer(prev => ({
             ...prev,
-            tetromino: { ...prev.tetromino, shape: clonedPlayer.tetromino },
+            tetromino: { ...prev.tetromino, shape: clonedPlayer.tetromino.shape },
             pos: { x: clonedPlayer.pos.x, y: clonedPlayer.pos.y }
         }));
     };
