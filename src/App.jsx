@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-
-import React, { useState } from 'react';
-
 import Board from './components/Board';
 import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
 // import Display from './components/Display'; // Placeholder for score/level display
