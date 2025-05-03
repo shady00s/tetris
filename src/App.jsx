@@ -71,17 +71,13 @@ function App() {
 
     // Effect for audio cleanup on unmount
     useEffect(() => {
-        // Initialize audio element on mount if it doesn't exist
-        if (!audioRef.current) {
-             // Use the path relative to the public folder
-            audioRef.current = new Audio('/tetris-theme.mp3');
-            audioRef.current.loop = true; // Loop the music
-        }
+        // Store the ref in a variable to use in the cleanup function
+        const audio = audioRef.current;
         // Cleanup function to pause audio when component unmounts
         return () => {
-            audioRef.current?.pause();
+            audio?.pause();
         };
-    }, []); // Empty dependency array ensures this runs only once on mount and cleanup on unmount
+    }, []); // Empty dependency array ensures this runs only for mount and unmount
 
 
     const movePlayer = dir => {
@@ -102,11 +98,15 @@ function App() {
         setGameOver(false);
         setIsPaused(false); // Ensure game isn't paused when starting
 
-        // Start playing music
-        if (audioRef.current) {
-            audioRef.current.currentTime = 0; // Reset playback to the beginning
-            audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+        // Initialize and start playing music
+        if (!audioRef.current) {
+            // Initialize on first start if not already done
+            audioRef.current = new Audio('/tetris-theme.mp3');
+            audioRef.current.loop = true;
         }
+        // Reset playback to the beginning and play
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(error => console.error("Audio play failed:", error));
     };
 
     const togglePause = () => {
