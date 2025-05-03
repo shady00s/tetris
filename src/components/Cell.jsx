@@ -16,9 +16,6 @@ const cellStyle = (type) => {
         borderLeftColor: `rgba(${color}, 0.3)`,
     };
 };
-    borderTopColor: `rgba(${TETROMINOES[type].color}, 1)`,
-    borderLeftColor: `rgba(${TETROMINOES[type].color}, 0.3)`,
-});
 
 
 const Cell = ({ type }) => (
