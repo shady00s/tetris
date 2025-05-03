@@ -5,10 +5,12 @@ import { STAGE_WIDTH, checkCollision } from '../gameHelpers';
 
 export const usePlayer = () => {
     const [player, setPlayer] = useState({
-        pos: { x: 0, y: 0 },
-        tetromino: TETROMINOES[0].shape, // Initial empty shape
+        pos: { x: STAGE_WIDTH / 2 - 1, y: 0 }, // Start centered
+        tetromino: TETROMINOES[0], // Use the whole object including color
         collided: false,
     });
+
+    const [nextTetromino, setNextTetromino] = useState(randomTetromino());
 
     const rotate = (matrix, dir) => {
         // Make the rows to become cols (transpose)
@@ -36,7 +38,12 @@ export const usePlayer = () => {
             }
         }
 
-        setPlayer(clonedPlayer);
+        // Update player state with the rotated tetromino
+        setPlayer(prev => ({
+            ...prev,
+            tetromino: { ...prev.tetromino, shape: clonedPlayer.tetromino },
+            pos: { x: clonedPlayer.pos.x, y: clonedPlayer.pos.y }
+        }));
     };
 
     const updatePlayerPos = ({ x, y, collided }) => {
@@ -50,10 +57,12 @@ export const usePlayer = () => {
     const resetPlayer = useCallback(() => {
         setPlayer({
             pos: { x: STAGE_WIDTH / 2 - 1, y: 0 }, // Center horizontally
-            tetromino: randomTetromino().shape,
+            tetromino: nextTetromino, // Use the previously stored next piece
             collided: false,
         });
-    }, []);
+        setNextTetromino(randomTetromino()); // Generate a new next piece
+    }, [nextTetromino]); // Dependency on nextTetromino
 
-    return [player, updatePlayerPos, resetPlayer, playerRotate];
+    // Return player, nextTetromino, and the functions
+    return [player, nextTetromino, updatePlayerPos, resetPlayer, playerRotate];
 };

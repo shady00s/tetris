@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
+import React, { useState } from 'react';
+
 import Board from './components/Board';
+import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
 // import Display from './components/Display'; // Placeholder for score/level display
 // import StartButton from './components/StartButton'; // Placeholder for start button
 
@@ -59,7 +62,8 @@ function App() {
     const [dropTime, setDropTime] = useState(null);
     const [gameOver, setGameOver] = useState(false);
 
-    const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
+    // Get nextTetromino from usePlayer hook
+    const [player, nextTetromino, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
     const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
     const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
@@ -151,11 +155,13 @@ function App() {
             <div style={gameAreaStyle}>
                 <Board stage={stage} />
                 <aside style={asideStyle}>
+                     {/* Render the NextPiecePreview component */}
+                    {!gameOver && nextTetromino && <NextPiecePreview tetromino={nextTetromino} />}
                     {gameOver ? (
                         <div style={displayStyle}>Game Over</div>
                     ) : (
                         <div>
-                            <div style={displayStyle}>Score: {score}</div>
+                           <div style={displayStyle}>Score: {score}</div>
                             <div style={displayStyle}>Rows: {rows}</div>
                             <div style={displayStyle}>Level: {level}</div>
                         </div>

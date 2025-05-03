@@ -32,9 +32,12 @@ export const useStage = (player, resetPlayer) => {
             player.tetromino.forEach((row, y) => {
                 row.forEach((value, x) => {
                     if (value !== 0) {
-                        if (newStage[y + player.pos.y] && newStage[y + player.pos.y][x + player.pos.x]) {
-                            newStage[y + player.pos.y][x + player.pos.x] = [
-                                value,
+                        // Check bounds before accessing newStage
+                        const targetY = y + player.pos.y;
+                        const targetX = x + player.pos.x;
+                        if (newStage[targetY] && newStage[targetY][targetX]) {
+                            newStage[targetY][targetX] = [
+                                player.tetromino.shape[y][x], // Use the actual type from the player's tetromino
                                 `${player.collided ? 'merged' : 'clear'}`,
                             ];
                         }

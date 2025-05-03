@@ -3,14 +3,16 @@ import Cell from './Cell';
 
 const boardStyle = (height, width) => ({
     display: 'grid',
-    gridTemplateRows: `repeat(${height}, calc(25vw / ${width}))`,
+    // Make rows relative to viewport height for better aspect ratio control
+    gridTemplateRows: `repeat(${height}, calc(80vh / ${height}))`,
     gridTemplateColumns: `repeat(${width}, 1fr)`,
     gridGap: '1px',
     border: '2px solid #333',
-    width: '100%',
-    maxWidth: '25vw', // Adjust based on desired size relative to viewport width
+    // Calculate width based on row height to maintain square cells
+    width: `calc(80vh / ${height} * ${width})`,
+    maxHeight: '80vh', // Limit height
     background: '#111',
-    margin: '0 auto' // Center the board
+    // margin: '0 auto' // Keep centered if needed, but flex layout in App handles it
 });
 
 
