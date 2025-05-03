@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Board from './components/Board';
 import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
 // import Display from './components/Display'; // Placeholder for score/level display
@@ -65,8 +65,24 @@ function App() {
     const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
     const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
+    const audioRef = useRef(null); // Ref to hold the audio element
 
     console.log('re-render'); // Helps debugging
+
+    // Effect for audio cleanup on unmount
+    useEffect(() => {
+        // Initialize audio element on mount if it doesn't exist
+        if (!audioRef.current) {
+             // Use the path relative to the public folder
+            audioRef.current = new Audio('/tetris-theme.mp3');
+            audioRef.current.loop = true; // Loop the music
+        }
+        // Cleanup function to pause audio when component unmounts
+        return () => {
+            audioRef.current?.pause();
+        };
+    }, []); // Empty dependency array ensures this runs only once on mount and cleanup on unmount
+
 
     const movePlayer = dir => {
         if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -85,6 +101,9 @@ function App() {
         setLevel(0);
         setGameOver(false);
         setIsPaused(false); // Ensure game isn't paused when starting
+
+        // Start playing music
+        audioRef.current?.play().catch(error => console.error("Audio play failed:", error));
     };
 
     const togglePause = () => {
@@ -93,10 +112,12 @@ function App() {
                 // Resume
                 setDropTime(1000 / (level + 1) + 200); // Restore drop time based on level
                 setIsPaused(false);
+                audioRef.current?.play().catch(error => console.error("Audio resume failed:", error)); // Resume music
             } else {
                 // Pause
                 setDropTime(null); // Stop the drop interval
                 setIsPaused(true);
+                audioRef.current?.pause(); // Pause music
             }
         }
     };
@@ -114,10 +135,12 @@ function App() {
             updatePlayerPos({ x: 0, y: 1, collided: false });
         } else {
             // Game Over!
+            // Game Over!
             if (player.pos.y < 1) {
                 console.log("GAME OVER!!!");
                 setGameOver(true);
                 setDropTime(null);
+                audioRef.current?.pause(); // Pause music on game over
             }
             updatePlayerPos({ x: 0, y: 0, collided: true });
         }
