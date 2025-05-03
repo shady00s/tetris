@@ -2,17 +2,29 @@ import { useState, useCallback } from 'react';
 
 import { TETROMINOES, randomTetromino } from '../tetrominoes';
 import { STAGE_WIDTH, checkCollision } from '../gameHelpers';
+import { Player, Tetromino, StageType, TetrominoType } from '../types'; // Import types
 
-export const usePlayer = () => {
-    const [player, setPlayer] = useState({
+// Define the return type of the hook for clarity
+type UsePlayerReturn = [
+    Player,
+    Tetromino,
+    (pos: { x: number; y: number; collided: boolean }) => void,
+    () => void,
+    (stage: StageType, dir: number) => void
+];
+
+
+export const usePlayer = (): UsePlayerReturn => {
+    const [player, setPlayer] = useState<Player>({
         pos: { x: STAGE_WIDTH / 2 - 1, y: 0 }, // Start centered
-        tetromino: TETROMINOES[0], // Use the whole object including color
+        tetromino: TETROMINOES[0], // Use the empty tetromino object initially
         collided: false,
     });
 
-    const [nextTetromino, setNextTetromino] = useState(randomTetromino());
+    const [nextTetromino, setNextTetromino] = useState<Tetromino>(randomTetromino());
 
-    const rotate = (matrix, dir) => {
+    // Type the matrix parameter and return value
+    const rotate = (matrix: (TetrominoType | 0)[][], dir: number): (TetrominoType | 0)[][] => {
         // Make the rows to become cols (transpose)
         const rotatedTetro = matrix.map((_, index) =>
             matrix.map(col => col[index]),
@@ -22,8 +34,9 @@ export const usePlayer = () => {
         return rotatedTetro.reverse();
     };
 
-    const playerRotate = (stage, dir) => {
-        const clonedPlayer = JSON.parse(JSON.stringify(player));
+    // Type the stage and dir parameters
+    const playerRotate = (stage: StageType, dir: number): void => {
+        const clonedPlayer: Player = JSON.parse(JSON.stringify(player));
         // Rotate the shape, not the whole tetromino object
         clonedPlayer.tetromino.shape = rotate(clonedPlayer.tetromino.shape, dir);
 
@@ -49,7 +62,8 @@ export const usePlayer = () => {
         }));
     };
 
-    const updatePlayerPos = ({ x, y, collided }) => {
+    // Type the parameter object
+    const updatePlayerPos = ({ x, y, collided }: { x: number; y: number; collided: boolean }): void => {
         setPlayer(prev => ({
             ...prev,
             pos: { x: (prev.pos.x + x), y: (prev.pos.y + y) },
@@ -57,7 +71,8 @@ export const usePlayer = () => {
         }));
     };
 
-    const resetPlayer = useCallback(() => {
+    // Specify the type for useCallback
+    const resetPlayer = useCallback((): void => {
         setPlayer({
             pos: { x: STAGE_WIDTH / 2 - 1, y: 0 }, // Center horizontally
             tetromino: nextTetromino, // Use the previously stored next piece

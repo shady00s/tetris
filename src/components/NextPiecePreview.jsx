@@ -1,8 +1,14 @@
 import React from 'react';
-import Cell from './Cell';
+import Cell from './Cell'; // Will be Cell.tsx after rename
+import { Tetromino, CellData } from '../types'; // Import types
 
-// Styles for the preview grid container
-const previewStyle = {
+// Define props type for the component
+interface NextPiecePreviewProps {
+    tetromino: Tetromino;
+}
+
+// Type the style objects
+const previewStyle: React.CSSProperties = {
     display: 'grid',
     // Increase grid size to 5x5
     gridTemplateRows: `repeat(5, calc(6vw / 5))`, // Adjust cell size calculation
@@ -16,8 +22,8 @@ const previewStyle = {
     marginBottom: '20px', // Space below the preview
 };
 
-// Styles for the wrapper div containing the label and preview
-const wrapperStyle = {
+// Type the style objects
+const wrapperStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center', // Center the preview grid horizontally

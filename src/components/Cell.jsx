@@ -1,7 +1,14 @@
 import React from 'react';
 import { TETROMINOES } from '../tetrominoes';
+import { TetrominoType } from '../types'; // Import type
 
-const cellStyle = (type) => {
+// Define props type for the component
+interface CellProps {
+    type: TetrominoType;
+}
+
+// Type the function parameter and return type (React.CSSProperties)
+const cellStyle = (type: TetrominoType): React.CSSProperties => {
     const color = TETROMINOES[type].color;
     const borderSize = type === 0 ? '0px' : '1px'; // Smaller border for preview
 
@@ -17,8 +24,8 @@ const cellStyle = (type) => {
     };
 };
 
-
-const Cell = ({ type }) => (
+// Use React.FC (Functional Component) with props type
+const Cell: React.FC<CellProps> = ({ type }) => (
     <div style={cellStyle(type)}></div>
 );
 

@@ -1,7 +1,14 @@
 import React from 'react';
-import Cell from './Cell';
+import Cell from './Cell'; // Will be Cell.tsx after rename
+import { StageType } from '../types'; // Import type
 
-const boardStyle = (height, width) => ({
+// Define props type for the component
+interface BoardProps {
+    stage: StageType;
+}
+
+// Type the function parameters and return type
+const boardStyle = (height: number, width: number): React.CSSProperties => ({
     display: 'grid',
     // Make rows relative to viewport height for better aspect ratio control
     gridTemplateRows: `repeat(${height}, calc(80vh / ${height}))`,
@@ -15,10 +22,12 @@ const boardStyle = (height, width) => ({
     // margin: '0 auto' // Keep centered if needed, but flex layout in App handles it
 });
 
-
-const Board = ({ stage }) => (
+// Use React.FC with props type
+const Board: React.FC<BoardProps> = ({ stage }) => (
     <div style={boardStyle(stage.length, stage[0].length)}>
-        {stage.map(row => row.map((cell, x) => <Cell key={x} type={cell[0]} />))}
+        {stage.map((row, y) => // Add key for row map
+            row.map((cell, x) => <Cell key={`${y}-${x}`} type={cell[0]} />) // More robust key for cell
+        )}
     </div>
 );
 

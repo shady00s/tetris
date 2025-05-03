@@ -1,27 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Board from './components/Board';
-import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
-// import Display from './components/Display'; // Placeholder for score/level display
-// import StartButton from './components/StartButton'; // Placeholder for start button
+// Update imports to use .tsx/.ts extensions (though Vite might handle this)
+import Board from './components/Board.tsx';
+import NextPiecePreview from './components/NextPiecePreview.tsx';
 
 // Custom Hooks
-import { usePlayer } from './hooks/usePlayer';
-import { useStage } from './hooks/useStage';
-import { useInterval } from './hooks/useInterval';
-import { useGameStatus } from './hooks/useGameStatus';
+import { usePlayer } from './hooks/usePlayer.ts';
+import { useStage } from './hooks/useStage.ts';
+import { useInterval } from './hooks/useInterval.ts';
+import { useGameStatus } from './hooks/useGameStatus.ts';
 
 // Helpers
-import { createStage, checkCollision } from './gameHelpers';
+import { createStage, checkCollision } from './gameHelpers.js'; // Keep .js if not converted
+import { StageType } from './types'; // Import StageType if needed elsewhere
 
-// Styles
-// Consider creating a styled components file or using CSS modules
-const appStyle = {
+// Styles - Add type React.CSSProperties
+const appStyle: React.CSSProperties = {
     fontFamily: 'Arial, sans-serif',
     color: '#fff',
     textAlign: 'center', // Center align text elements
 };
 
-const gameAreaStyle = {
+const gameAreaStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center', // Center game area content
@@ -30,7 +29,7 @@ const gameAreaStyle = {
     maxWidth: '900px', // Max width for the game area
 };
 
-const asideStyle = {
+const asideStyle: React.CSSProperties = {
     width: '200px',
     display: 'block',
     padding: '0 20px',
@@ -38,7 +37,7 @@ const asideStyle = {
     fontSize: '0.8rem',
 };
 
-const displayStyle = {
+const displayStyle: React.CSSProperties = {
     boxSizing: 'border-box',
     display: 'flex',
     alignItems: 'center',
@@ -55,17 +54,20 @@ const displayStyle = {
 };
 
 
-function App() {
-    const [dropTime, setDropTime] = useState(null);
-    const [gameOver, setGameOver] = useState(false);
-    const [isPaused, setIsPaused] = useState(false); // Add paused state
+// Define the main App component as a React Functional Component
+const App: React.FC = () => {
+    // Add types to useState hooks
+    const [dropTime, setDropTime] = useState<number | null>(null);
+    const [gameOver, setGameOver] = useState<boolean>(false);
+    const [isPaused, setIsPaused] = useState<boolean>(false); // Add paused state
 
-    // Get nextTetromino from usePlayer hook
+    // Types are inferred from the custom hooks' return types
     const [player, nextTetromino, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
     const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
     const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
-    const audioRef = useRef(null); // Ref to hold the audio element
+    // Add type to useRef
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     console.log('re-render'); // Helps debugging
 
@@ -79,14 +81,15 @@ function App() {
         };
     }, []); // Empty dependency array ensures this runs only for mount and unmount
 
-
-    const movePlayer = dir => {
+    // Add type for the direction parameter
+    const movePlayer = (dir: number): void => {
+        // checkCollision needs player and stage types defined or imported
         if (!checkCollision(player, stage, { x: dir, y: 0 })) {
-            updatePlayerPos({ x: dir, y: 0 });
+            updatePlayerPos({ x: dir, y: 0, collided: false }); // Ensure collided is passed
         }
     };
 
-    const startGame = () => {
+    const startGame = (): void => {
         console.log("test")
         // Reset everything
         setStage(createStage());
@@ -106,10 +109,11 @@ function App() {
         }
         // Reset playback to the beginning and play
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+        // Type assertion for safety, though check is already present
+        (audioRef.current as HTMLAudioElement).play().catch(error => console.error("Audio play failed:", error));
     };
 
-    const togglePause = () => {
+    const togglePause = (): void => {
         if (!gameOver) {
             if (isPaused) {
                 // Resume
@@ -149,7 +153,9 @@ function App() {
         }
     };
 
-    const keyUp = ({ keyCode }) => {
+    // Type the event parameter
+    const keyUp = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+        const { keyCode } = event;
         // Ignore keyup if paused or game over
         if (!gameOver && !isPaused) {
             // Activate the interval again when user releases down arrow.
@@ -160,17 +166,33 @@ function App() {
     };
 
 
-    const dropPlayer = () => {
+    const dropPlayer = (): void => {
         // We don't need to run the interval when we use the arrow down to move the tetromino downwards. So deactivate it for a moment.
         setDropTime(null);
         drop();
     };
 
-    const move = (e) => {
+    // Type the event parameter
+    const move = (event: React.KeyboardEvent<HTMLDivElement>): void => {
         // Ignore moves if paused or game over
         if (!gameOver && !isPaused) {
-            const { keyCode } = e;
+            const { keyCode } = event;
             if (keyCode === 37) { // Left arrow
+                event.preventDefault();
+                movePlayer(-1);
+            } else if (keyCode === 39) { // Right arrow
+                event.preventDefault();
+                movePlayer(1);
+            } else if (keyCode === 40) { // Down arrow
+                event.preventDefault();
+                dropPlayer();
+            } else if (keyCode === 38 || keyCode === 32) { // Up arrow or Spacebar (rotate)
+                event.preventDefault();
+                // playerRotate expects StageType
+                playerRotate(stage, 1);
+            }
+        }
+    };
                 e.preventDefault();
                 movePlayer(-1);
             } else if (keyCode === 39) { // Right arrow
@@ -193,7 +215,8 @@ function App() {
 
     return (
         // Add role="button" and tabIndex="0" to make the div focusable and accessible for keyboard events
-        <div style={appStyle} role="button" tabIndex="0" onKeyDown={e => move(e)} onKeyUp={keyUp}>
+        // Pass typed event handlers
+        <div style={appStyle} role="button" tabIndex={0} onKeyDown={move} onKeyUp={keyUp}>
             <div style={gameAreaStyle}>
                 <Board stage={stage} />
                 <aside style={asideStyle}>

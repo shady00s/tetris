@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react';
 import { createStage } from '../gameHelpers';
+import { Player, StageType, CellData } from '../types'; // Import types
 
-export const useStage = (player, resetPlayer) => {
-    const [stage, setStage] = useState(createStage());
-    const [rowsCleared, setRowsCleared] = useState(0);
+// Define the return type of the hook
+type UseStageReturn = [
+    StageType,
+    React.Dispatch<React.SetStateAction<StageType>>,
+    number
+];
+
+export const useStage = (player: Player, resetPlayer: () => void): UseStageReturn => {
+    const [stage, setStage] = useState<StageType>(createStage());
+    const [rowsCleared, setRowsCleared] = useState<number>(0);
 
     useEffect(() => {
         setRowsCleared(0);
 
-        const sweepRows = newStage =>
-            newStage.reduce((ack, row) => {
+        // Type the parameter and return value of sweepRows
+        const sweepRows = (newStage: StageType): StageType =>
+            newStage.reduce((ack: StageType, row: CellData[]) => {
                 // Check if the row is full (doesn't contain any 'clear' cells)
-                if (row.findIndex(cell => cell[0] === 0) === -1) {
+                if (row.findIndex((cell: CellData) => cell[0] === 0) === -1) {
                     setRowsCleared(prev => prev + 1);
                     // Create a new empty row at the top of the stage
                     ack.unshift(new Array(newStage[0].length).fill([0, 'clear']));
@@ -19,13 +28,14 @@ export const useStage = (player, resetPlayer) => {
                 }
                 ack.push(row);
                 return ack;
-            }, []);
+            }, [] as StageType); // Initialize accumulator type
 
 
-        const updateStage = prevStage => {
+        // Type the parameter and return value of updateStage
+        const updateStage = (prevStage: StageType): StageType => {
             // First flush the stage
-            const newStage = prevStage.map(row =>
-                row.map(cell => (cell[1] === 'clear' ? [0, 'clear'] : cell)),
+            const newStage: StageType = prevStage.map((row: CellData[]) =>
+                row.map((cell: CellData): CellData => (cell[1] === 'clear' ? [0, 'clear'] : cell)),
             );
 
             // Then draw the tetromino
