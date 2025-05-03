@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { TETROMINOES, randomTetromino } from '../tetrominoes.ts'; // Update extension
+import { TETROMINOES, randomTetromino } from '../tetrominoes.ts'; // Ensure this points to .ts
 import { STAGE_WIDTH, checkCollision } from '../gameHelpers';
 import { Player, Tetromino, StageType, TetrominoType } from '../types'; // Import types
 
