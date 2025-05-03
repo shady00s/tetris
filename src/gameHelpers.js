@@ -1,12 +1,21 @@
-export const STAGE_WIDTH = 10;
-export const STAGE_HEIGHT = 20;
+import { Player, StageType, CellData } from './types'; // Import necessary types
 
-export const createStage = () =>
+export const STAGE_WIDTH: number = 10;
+export const STAGE_HEIGHT: number = 20;
+
+// Add return type StageType
+export const createStage = (): StageType =>
     Array.from(Array(STAGE_HEIGHT), () =>
-        new Array(STAGE_WIDTH).fill([0, 'clear'])
+        // Ensure the filled value matches CellData type
+        new Array(STAGE_WIDTH).fill([0, 'clear'] as CellData)
     );
 
-export const checkCollision = (player, stage, { x: moveX, y: moveY }) => {
+// Add types for parameters and return value
+export const checkCollision = (
+    player: Player,
+    stage: StageType,
+    { x: moveX, y: moveY }: { x: number; y: number }
+): boolean => {
     // Use player.tetromino.shape
     for (let y = 0; y < player.tetromino.shape.length; y += 1) {
         for (let x = 0; x < player.tetromino.shape[y].length; x += 1) {

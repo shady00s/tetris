@@ -10,7 +10,7 @@ import { useInterval } from './hooks/useInterval';
 import { useGameStatus } from './hooks/useGameStatus';
 
 // Helpers
-import { createStage, checkCollision } from './gameHelpers.js'; // Keep .js if not converted
+import { createStage, checkCollision } from './gameHelpers.ts'; // Update to .ts
 import { StageType } from './types'; // Import StageType if needed elsewhere
 
 // Styles - Add type React.CSSProperties
