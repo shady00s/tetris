@@ -121,15 +121,20 @@ function App() {
         drop();
     };
 
-    const move = ({ keyCode }) => {
+    const move = (e) => {
         if (!gameOver) {
+            const { keyCode } = e;
             if (keyCode === 37) { // Left arrow
+                e.preventDefault();
                 movePlayer(-1);
             } else if (keyCode === 39) { // Right arrow
+                e.preventDefault();
                 movePlayer(1);
             } else if (keyCode === 40) { // Down arrow
+                e.preventDefault();
                 dropPlayer();
             } else if (keyCode === 38) { // Up arrow (rotate)
+                e.preventDefault();
                 playerRotate(stage, 1);
             }
         }
