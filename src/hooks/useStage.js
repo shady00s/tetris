@@ -29,7 +29,7 @@ export const useStage = (player, resetPlayer) => {
             );
 
             // Then draw the tetromino
-            player.tetromino.forEach((row, y) => {
+            player.tetromino.shape.forEach((row, y) => { // Iterate over shape
                 row.forEach((value, x) => {
                     if (value !== 0) {
                         // Check bounds before accessing newStage
@@ -56,7 +56,8 @@ export const useStage = (player, resetPlayer) => {
 
         setStage(prev => updateStage(prev));
 
-    }, [player, resetPlayer]); // Added player.collided, player.pos.x, player.pos.y, player.tetromino dependencies
+    // More specific dependencies
+    }, [player.collided, player.pos.x, player.pos.y, player.tetromino, resetPlayer]);
 
     return [stage, setStage, rowsCleared];
 };
