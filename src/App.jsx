@@ -134,7 +134,7 @@ function App() {
             } else if (keyCode === 40) { // Down arrow
                 e.preventDefault();
                 dropPlayer();
-            } else if (keyCode === 38 || keyCode === 32) { // Up arrow or Spacebar (rotate)
+            } else if (keyCode === 38) { // Up arrow (rotate)
                 e.preventDefault();
                 playerRotate(stage, 1);
             }
