@@ -103,7 +103,10 @@ function App() {
         setIsPaused(false); // Ensure game isn't paused when starting
 
         // Start playing music
-        audioRef.current?.play().catch(error => console.error("Audio play failed:", error));
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0; // Reset playback to the beginning
+            audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+        }
     };
 
     const togglePause = () => {
