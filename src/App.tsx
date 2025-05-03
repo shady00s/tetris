@@ -194,20 +194,6 @@ const App: React.FC = () => {
             }
         }
     };
-                e.preventDefault();
-                movePlayer(-1);
-            } else if (keyCode === 39) { // Right arrow
-                e.preventDefault();
-                movePlayer(1);
-            } else if (keyCode === 40) { // Down arrow
-                e.preventDefault();
-                dropPlayer();
-            } else if (keyCode === 38 || keyCode === 32) { // Up arrow or Spacebar (rotate)
-                e.preventDefault();
-                playerRotate(stage, 1);
-            }
-        }
-    };
 
     useInterval(() => {
         drop();
