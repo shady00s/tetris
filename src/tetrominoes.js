@@ -1,5 +1,10 @@
-export const TETROMINOES = {
-    0: { shape: [[0]], color: '0, 0, 0' }, // Represents an empty cell
+import { Tetromino, TetrominoType } from './types'; // Import types
+
+// Define the type for the TETROMINOES constant
+// Keys are TetrominoType (letters) or 0, but represented as strings/numbers in JS object keys
+// Values are Tetromino objects
+export const TETROMINOES: { [key: string]: Tetromino } = {
+    '0': { shape: [[0]], color: '0, 0, 0' }, // Represents an empty cell
     I: {
         shape: [
             [0, 'I', 0, 0],
@@ -58,9 +63,11 @@ export const TETROMINOES = {
     },
 };
 
-export const randomTetromino = () => {
+// Define the return type as Tetromino
+export const randomTetromino = (): Tetromino => {
     const tetrominoes = 'IJLOSTZ';
-    const randTetromino =
+    const randTetrominoKey =
         tetrominoes[Math.floor(Math.random() * tetrominoes.length)];
-    return TETROMINOES[randTetromino];
+    // Ensure the key exists before accessing
+    return TETROMINOES[randTetrominoKey];
 };

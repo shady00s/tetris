@@ -1,5 +1,5 @@
 import React from 'react';
-import { TETROMINOES } from '../tetrominoes';
+import { TETROMINOES } from '../tetrominoes.ts'; // Update extension
 import { TetrominoType } from '../types'; // Import type
 
 // Define props type for the component
