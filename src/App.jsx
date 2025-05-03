@@ -58,6 +58,7 @@ const displayStyle = {
 function App() {
     const [dropTime, setDropTime] = useState(null);
     const [gameOver, setGameOver] = useState(false);
+    const [isPaused, setIsPaused] = useState(false); // Add paused state
 
     // Get nextTetromino from usePlayer hook
     const [player, nextTetromino, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
@@ -83,7 +84,23 @@ function App() {
         setRows(0);
         setLevel(0);
         setGameOver(false);
+        setIsPaused(false); // Ensure game isn't paused when starting
     };
+
+    const togglePause = () => {
+        if (!gameOver) {
+            if (isPaused) {
+                // Resume
+                setDropTime(1000 / (level + 1) + 200); // Restore drop time based on level
+                setIsPaused(false);
+            } else {
+                // Pause
+                setDropTime(null); // Stop the drop interval
+                setIsPaused(true);
+            }
+        }
+    };
+
 
     const drop = () => {
         // Increase level when player has cleared 10 rows
@@ -107,10 +124,11 @@ function App() {
     };
 
     const keyUp = ({ keyCode }) => {
-        if (!gameOver) {
+        // Ignore keyup if paused or game over
+        if (!gameOver && !isPaused) {
             // Activate the interval again when user releases down arrow.
             if (keyCode === 40) { // Down arrow
-                setDropTime(1000 / (level + 1) + 200);
+                setDropTime(1000 / (level + 1) + 200); // Restore drop time
             }
         }
     };
@@ -123,7 +141,8 @@ function App() {
     };
 
     const move = (e) => {
-        if (!gameOver) {
+        // Ignore moves if paused or game over
+        if (!gameOver && !isPaused) {
             const { keyCode } = e;
             if (keyCode === 37) { // Left arrow
                 e.preventDefault();
@@ -163,8 +182,16 @@ function App() {
                             <div style={displayStyle}>Level: {level}</div>
                         </div>
                     )}
-                    {/* Placeholder for StartButton component */}
-                    <button onClick={startGame} style={{ padding: '10px', fontSize: '1rem', cursor: 'pointer' }}>Start Game</button>
+                    {/* Start Button */}
+                    <button onClick={startGame} style={{ display: 'block', width: '100%', padding: '10px', marginBottom: '10px', fontSize: '1rem', cursor: 'pointer' }}>Start Game</button>
+                    {/* Pause Button */}
+                    <button
+                        onClick={togglePause}
+                        style={{ display: 'block', width: '100%', padding: '10px', fontSize: '1rem', cursor: 'pointer' }}
+                        disabled={gameOver || dropTime === null && !isPaused} // Disable if game over or not started
+                    >
+                        {isPaused ? 'Resume' : 'Pause'}
+                    </button>
                 </aside>
             </div>
         </div>
