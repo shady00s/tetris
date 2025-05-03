@@ -4,14 +4,14 @@ import Cell from './Cell';
 // Styles for the preview grid container
 const previewStyle = {
     display: 'grid',
-    // Dynamically set grid size based on tetromino shape (max 4x4 assumed)
-    gridTemplateRows: `repeat(4, calc(5vw / 4))`, // Smaller cells relative to viewport width
-    gridTemplateColumns: `repeat(4, calc(5vw / 4))`,
+    // Increase grid size to 5x5
+    gridTemplateRows: `repeat(5, calc(6vw / 5))`, // Adjust cell size calculation
+    gridTemplateColumns: `repeat(5, calc(6vw / 5))`,
     gridGap: '1px',
     border: '2px solid #333',
-    width: '5vw', // Smaller overall width
-    maxWidth: '80px', // Max width to prevent excessive scaling
-    maxHeight: '80px',
+    width: '6vw', // Adjust overall width
+    maxWidth: '100px', // Increase max width
+    maxHeight: '100px', // Increase max height
     background: '#111',
     marginBottom: '20px', // Space below the preview
 };
@@ -28,21 +28,22 @@ const wrapperStyle = {
 
 
 const NextPiecePreview = ({ tetromino }) => {
-    // Create a 4x4 grid representation for the preview
-    const previewGrid = Array.from(Array(4), () => Array(4).fill([0, 'clear']));
+    // Create a 5x5 grid representation for the preview
+    const previewGrid = Array.from(Array(5), () => Array(5).fill([0, 'clear']));
 
     // Overlay the tetromino shape onto the grid
-    // Center the piece within the 4x4 grid if possible
+    // Center the piece within the 5x5 grid
     const shape = tetromino.shape;
-    const yOffset = Math.floor((4 - shape.length) / 2);
-    const xOffset = Math.floor((4 - shape[0].length) / 2);
+    const yOffset = Math.floor((5 - shape.length) / 2); // Center in 5 rows
+    const xOffset = Math.floor((5 - shape[0].length) / 2); // Center in 5 columns
 
     shape.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
                 const gridY = y + yOffset;
                 const gridX = x + xOffset;
-                if (gridY >= 0 && gridY < 4 && gridX >= 0 && gridX < 4) {
+                // Check bounds against the 5x5 grid
+                if (gridY >= 0 && gridY < 5 && gridX >= 0 && gridX < 5) {
                      previewGrid[gridY][gridX] = [value, 'preview']; // Use 'preview' state? Or just value
                 }
             }
